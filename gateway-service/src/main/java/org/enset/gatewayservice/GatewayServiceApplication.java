@@ -8,6 +8,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.cloud.gateway.discovery.DiscoveryClientRouteDefinitionLocator;
 import org.springframework.cloud.gateway.discovery.DiscoveryLocatorProperties;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.CorsWebFilter;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
 
 @SpringBootApplication
@@ -23,5 +28,18 @@ public class GatewayServiceApplication {
 
         return new DiscoveryClientRouteDefinitionLocator(rdc,dlp);
 
+    }
+    @Bean
+    public CorsWebFilter corsFilter() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedOrigin("*"); // Autorise toutes les origines
+        config.addAllowedMethod("*"); // Autorise toutes les méthodes
+        config.addAllowedHeader("*"); // Autorise toutes les en-têtes
+        config.setAllowCredentials(true); // Si nécessaire
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+
+        return new CorsWebFilter(source);
     }
 }
